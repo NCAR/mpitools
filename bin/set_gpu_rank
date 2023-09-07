@@ -23,6 +23,7 @@ function eecho {
 case $LMOD_FAMILY_MPI in
     cray-mpich)
         export MPICH_GPU_SUPPORT_ENABLED=1
+        export MPICH_OFI_NIC_POLICY=GPU
         export LOCAL_RANK=$PMI_LOCAL_RANK
         export GLOBAL_RANK=$PMI_RANK
         ;;
@@ -48,6 +49,10 @@ if [[ -n $LOCAL_RANK ]]; then
         if [[ $# -gt 0 ]]; then
             num_nodes=$(uniq < $PBS_NODEFILE | wc -l)
             echo "$my_name: using $LMOD_FAMILY_MPI MPI library with $NGPUS per node on $num_nodes hosts..."
+
+            if [[ $LMOD_FAMILY_MPI == cray-mpich ]]; then
+                echo "$my_name: setting MPICH_GPU_SUPPORT_ENABLED=1, MPICH_OFI_NIC_POLICY=GPU"
+            fi
         else
             >&2 echo -e "Error: $my_name must be used to run an application\n"
             usage

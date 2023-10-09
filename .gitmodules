@@ -1,0 +1,3 @@
+[submodule "mpibind"]
+	path = mpibind
+	url = git@github.com:NCAR/mpibind.git
